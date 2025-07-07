@@ -1,0 +1,44 @@
+name: CI Job for QA Environment
+
+on:
+  push:
+    branches:
+      - qa
+
+permissions:
+  contents: read
+
+jobs:
+  api-calls:
+    runs-on: ubuntu-latest
+
+    permissions:
+      pull-requests: read
+
+    steps:
+      - name: Set up GitHub CLI
+        uses: cli/gh-action@v2
+        # with:
+        #   github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get latest merged PR to qa
+        id: get_pr
+        run: |
+          PR_DATA=$(gh pr list --state merged --search "base:qa sort:updated-desc" --limit 1 --json number,body)
+          echo "$PR_DATA" > pr.json
+
+      - name: Extract value from PR body
+        id: extract
+        run: |
+          DAG_ID=$(jq -r '.body' pr.json | grep -oP '(?<=`)(.*?)(?=`)' | head -1)
+          echo "dag_id=$DAG_ID" >> $GITHUB_OUTPUT
+
+      - name: Print value of DAG
+        run: |
+          echo ${{ steps.extract.outputs.dag_id }}
+
+      # - name: Make API Call
+      #   run: |
+      #     curl -X POST http://ec2-3-148-228-230.us-east-2.compute.amazonaws.com:8080/api/v1/dags/${{ steps.extract.outputs.dag_id }}/dagRuns \
+      #          -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" \
+      #          -H "Content-Type: application/json" \
