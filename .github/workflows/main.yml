@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - qa
+  pull_request:
+    types: [closed]
+    branches:
+      - qa
 
 permissions:
   contents: read
