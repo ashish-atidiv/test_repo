@@ -4,10 +4,10 @@ on:
   push:
     branches:
       - qa
-  pull_request:
-    types: [closed]
-    branches:
-      - qa
+  # pull_request:
+  #   types: [closed]
+  #   branches:
+  #     - qa
 
 permissions:
   contents: read
@@ -20,11 +20,6 @@ jobs:
       pull-requests: read
 
     steps:
-      - name: Set up GitHub CLI
-        uses: cli/gh-action@v2
-        # with:
-        #   github-token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Get latest merged PR to qa
         id: get_pr
         run: |
@@ -40,9 +35,3 @@ jobs:
       - name: Print value of DAG
         run: |
           echo ${{ steps.extract.outputs.dag_id }}
-
-      # - name: Make API Call
-      #   run: |
-      #     curl -X POST http://ec2-3-148-228-230.us-east-2.compute.amazonaws.com:8080/api/v1/dags/${{ steps.extract.outputs.dag_id }}/dagRuns \
-      #          -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" \
-      #          -H "Content-Type: application/json" \
