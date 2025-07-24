@@ -12,6 +12,9 @@ on:
 permissions:
   contents: read
 
+env:
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
 jobs:
   api-calls:
     runs-on: ubuntu-latest
