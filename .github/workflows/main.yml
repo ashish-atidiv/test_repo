@@ -35,7 +35,7 @@ jobs:
       - name: Extract value from PR body
         id: extract
         run: |
-          DAG_ID=$(jq -r '.body' pr.json | grep -oP '(?<=`)(.*?)(?=`)' | head -1)
+          DAG_ID=$(jq -r '.[0]["body"]' pr.json | grep -oP '(?<=`)(.*?)(?=`)' | head -1)
           echo "dag_id=$DAG_ID" >> $GITHUB_OUTPUT
 
       - name: Print value of DAG
