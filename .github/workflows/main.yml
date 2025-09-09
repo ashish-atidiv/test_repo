@@ -35,6 +35,6 @@ jobs:
           echo "dag_id=$DAG_ID" >> $GITHUB_OUTPUT
 
       - name: Print value of DAG
-        if: ${{ steps.extract.outputs.dag_id != '' }
+        if: ${{ steps.extract.outputs.dag_id != '' }}
         run: |
           echo ${{ steps.extract.outputs.dag_id }}
